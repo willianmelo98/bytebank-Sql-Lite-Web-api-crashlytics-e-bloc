@@ -61,7 +61,7 @@ class TransactionFormCubit extends Cubit<TransactionFormState> {
         await _sendNewTransafer(transactionCreated, senha, context);
 
     if (transferenciaEnviada != null) {
-      Future.delayed(Duration(seconds: 2)).then((value) => emit(SentState()));
+      emit(SentState());
     }
   }
 
