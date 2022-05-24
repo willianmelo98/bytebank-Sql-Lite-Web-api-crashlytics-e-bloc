@@ -1,14 +1,11 @@
 import 'dart:async';
 
-import 'package:bytebankdatabase/screens/apelido_user.dart';
-import 'package:bytebankdatabase/screens/counter.dart';
 import 'package:bytebankdatabase/widgets/tema_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:bytebankdatabase/screens/dashboard.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +33,49 @@ class Bytebank extends StatelessWidget {
       theme: tema,
       // ignore: prefer_const_constructors
       home: DashboardContainer(),
+    );
+  }
+}
+
+class testeContainerComBordaCurva extends StatelessWidget {
+  const testeContainerComBordaCurva({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('testes'),
+      ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: <Widget>[
+            Image.network(
+              "https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF's/gif14.gif",
+              fit: BoxFit.fitHeight,
+            ),
+            SizedBox(
+              height: 80,
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 220),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.transparent,
+              child: Container(
+                  decoration: new BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      borderRadius: BorderRadius.only(
+                        topRight: const Radius.circular(50.0),
+                      )),
+                  child: Column(
+                    children: <Widget>[
+                      Text("Hu"),
+                    ],
+                  )),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

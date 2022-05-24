@@ -1,5 +1,7 @@
+import 'package:bytebankdatabase/model/name.dart';
 import 'package:bytebankdatabase/screens/apelido_user.dart';
 import 'package:bytebankdatabase/screens/lista_transferencia.dart';
+import 'package:bytebankdatabase/widgets/container.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bytebankdatabase/screens/contacts_list.dart';
@@ -61,12 +63,8 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  void _showContactsList(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ContactsList(),
-      ),
-    );
+  void _showContactsList(BuildContext blocContext) {
+    push(blocContext, ContactsListContainer());
   }
 
   void _showName(BuildContext blocContext) {

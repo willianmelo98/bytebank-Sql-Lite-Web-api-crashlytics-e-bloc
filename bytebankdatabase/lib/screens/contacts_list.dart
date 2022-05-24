@@ -4,74 +4,112 @@ import 'package:bytebankdatabase/database/dao/contact_dao.dart';
 import 'package:bytebankdatabase/model/contact.dart';
 import 'package:bytebankdatabase/screens/contact_form.dart';
 import 'package:bytebankdatabase/screens/transaction_form.dart';
+import 'package:bytebankdatabase/widgets/container.dart';
 import 'package:bytebankdatabase/widgets/progress_indicator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactsList extends StatefulWidget {
+@immutable
+abstract class ContactsListState {
+  const ContactsListState();
+}
+
+@immutable
+class LoadingContactsListState extends ContactsListState {
+  const LoadingContactsListState();
+}
+
+@immutable
+class InitContactsListState extends ContactsListState {
+  const InitContactsListState();
+}
+
+@immutable
+class LoadedContactsListState extends ContactsListState {
+  final List<Contact> _contacts;
+
+  const LoadedContactsListState(this._contacts);
+}
+
+@immutable
+class FatalErrorContactsListState extends ContactsListState {
+  const FatalErrorContactsListState();
+}
+
+class ContactsListCubit extends Cubit<ContactsListState> {
+  ContactsListCubit() : super(InitContactsListState());
+
+  void reload(ContactDao dao) async {
+    emit(LoadingContactsListState());
+    dao.findAll().then((contacts) => emit(LoadedContactsListState(contacts)));
+  }
+}
+
+class ContactsListContainer extends BlocContainer {
   bool optionsVisible;
-  ContactsList({
+  ContactsListContainer({
     this.optionsVisible = true,
   });
   @override
-  State<ContactsList> createState() => _ContactsListState();
+  Widget build(BuildContext context) {
+    final ContactDao dao = ContactDao();
+
+    return BlocProvider<ContactsListCubit>(
+      create: (BuildContext context) {
+        final cubit = ContactsListCubit();
+        cubit.reload(dao);
+        return cubit;
+      },
+      child: ContactsList(optionsVisible: optionsVisible, dao: dao),
+    );
+  }
 }
 
-class _ContactsListState extends State<ContactsList> {
-  final ContactDao _contactDao = ContactDao();
+class ContactsList extends StatelessWidget {
+  bool optionsVisible;
+  final ContactDao dao;
+  ContactsList({required this.optionsVisible, required this.dao});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Contacts"),
       ),
-      body: FutureBuilder<List<Contact>>(
-        future: _contactDao.findAll(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            snapshot.error;
+      body: BlocBuilder<ContactsListCubit, ContactsListState>(
+        builder: (context, state) {
+          if (state is InitContactsListState ||
+              state is LoadingContactsListState) {
+            return ProgressoCustomizado();
           }
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              // TODO: Handle this case.
-              break;
-            case ConnectionState.waiting:
-              return ProgressoCustomizado(
-                mensagemDoIndicator: 'Em andamento',
-              );
+          if (state is LoadedContactsListState) {
+            final List<Contact> contactList = state._contacts;
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                final Contact _contactItem = contactList[index];
 
-            case ConnectionState.active:
-              // TODO: Handle this case.
-              break;
-            case ConnectionState.done:
-              if (snapshot.data != null) {
-                final List<Contact> contactList = snapshot.data ?? [];
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    final Contact _contactItem = contactList[index];
-
-                    return _ContactItem(
-                      visibleOptions: widget.optionsVisible,
-                      contact: _contactItem,
-                      onClick: () {
-                        _novaTransferencia(context, _contactItem);
-                      },
-                      deleteContact: () {
-                        _deleteContact(_contactItem);
-                      },
-                      updateContact: () {
-                        _updateContact(context, _contactItem);
-                      },
-                    );
+                return _ContactItem(
+                  visibleOptions: optionsVisible,
+                  contact: _contactItem,
+                  onClick: () {
+                    _novaTransferencia(context, _contactItem);
                   },
-                  itemCount: contactList.length,
+                  deleteContact: () {
+                    _deleteContact(context, _contactItem);
+                  },
+                  updateContact: () {
+                    _updateContact(context, _contactItem);
+                  },
                 );
-              }
-              break;
+              },
+              itemCount: contactList.length,
+            );
           }
+
           return Text("unknown error");
         },
       ),
       floatingActionButton: Visibility(
-        visible: widget.optionsVisible,
+        visible: optionsVisible,
         child: FloatingActionButton(
           onPressed: () {
             _newContact(context);
@@ -82,37 +120,36 @@ class _ContactsListState extends State<ContactsList> {
     );
   }
 
-  void _newContact(BuildContext context) {
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(builder: (context) => ContactForm()),
-        )
-        .then((value) => setState(() {}));
+  void _newContact(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => ContactForm()),
+    );
+
+    context.read<ContactsListCubit>().reload(dao);
   }
 
-  void _novaTransferencia(BuildContext context, Contact _contactItem) {
-    final isDialog = widget.optionsVisible;
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (context) => TransactionForm(_contactItem),
-          ),
-        )
-        .then((value) => !isDialog ? Navigator.pop(context) : print('false'));
+  void _novaTransferencia(BuildContext context, Contact _contactItem) async {
+    final isDialog = !optionsVisible;
+
+    await push(context, TransactionFormContainer(_contactItem));
+
+    if (isDialog) {
+      Navigator.pop(context);
+    }
   }
 
-  void _deleteContact(Contact _contactItem) {
-    _contactDao.delete(_contactItem.id!).whenComplete(() => setState(() {}));
+  void _deleteContact(BuildContext context, Contact _contactItem) async {
+    await dao.delete(_contactItem.id!);
+    context.read<ContactsListCubit>().reload(dao);
   }
 
-  void _updateContact(BuildContext context, Contact _contactItem) {
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (context) => ContactForm(contactInicial: _contactItem),
-          ),
-        )
-        .whenComplete(() => setState(() {}));
+  void _updateContact(BuildContext context, Contact _contactItem) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ContactForm(contactInicial: _contactItem),
+      ),
+    );
+    context.read<ContactsListCubit>().reload(dao);
   }
 }
 

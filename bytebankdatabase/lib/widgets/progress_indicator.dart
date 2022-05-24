@@ -24,3 +24,24 @@ class ProgressoCustomizado extends StatelessWidget {
     );
   }
 }
+
+class ProgressoComScaffold extends StatelessWidget {
+  final mensagem;
+
+  const ProgressoComScaffold({Key? key, this.mensagem}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Enviando...'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ProgressoCustomizado(
+          mensagemDoIndicator: mensagem,
+        ),
+      ),
+    );
+  }
+}

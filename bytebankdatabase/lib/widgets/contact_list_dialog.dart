@@ -13,7 +13,7 @@ class _ContactsDialogState extends State<ContactsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: ContactsList(
+      content: ContactsListContainer(
         optionsVisible: false,
       ),
       contentPadding: EdgeInsets.zero,
