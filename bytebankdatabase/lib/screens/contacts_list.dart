@@ -8,6 +8,8 @@ import 'package:bytebankdatabase/widgets/container.dart';
 import 'package:bytebankdatabase/widgets/progress_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widgets/giff_dialog.dart';
+
 @immutable
 abstract class ContactsListState {
   const ContactsListState();
@@ -105,7 +107,9 @@ class ContactsList extends StatelessWidget {
             );
           }
 
-          return Text("unknown error");
+          return GifDialog(
+            message: 'Error',
+          );
         },
       ),
       floatingActionButton: Visibility(

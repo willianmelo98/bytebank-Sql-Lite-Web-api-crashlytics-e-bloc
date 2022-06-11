@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:90078398824:android:89469a34938281955aeedd",
+         "mobilesdk_app_id": "1:90078398824:android:89469a34938281955aeedd",
         "android_client_info": {
           "package_name": "com.example.bytebankdatabase"
         }
