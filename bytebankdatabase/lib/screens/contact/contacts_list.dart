@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:bytebankdatabase/database/dao/contact_dao.dart';
 import 'package:bytebankdatabase/model/contact.dart';
-import 'package:bytebankdatabase/screens/contact_form.dart';
-import 'package:bytebankdatabase/screens/transaction_form.dart';
+import 'package:bytebankdatabase/screens/contact/contact_form.dart';
+import 'package:bytebankdatabase/screens/transferencia/transaction_form.dart';
 import 'package:bytebankdatabase/widgets/container.dart';
 import 'package:bytebankdatabase/widgets/progress_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../widgets/giff_dialog.dart';
+import '/widgets/giff_dialog.dart';
 
 @immutable
 abstract class ContactsListState {
@@ -38,7 +38,7 @@ class FatalErrorContactsListState extends ContactsListState {
 }
 
 class ContactsListCubit extends Cubit<ContactsListState> {
-  ContactsListCubit() : super(InitContactsListState());
+  ContactsListCubit() : super(const InitContactsListState());
 
   void reload(ContactDao dao) async {
     emit(LoadingContactsListState());

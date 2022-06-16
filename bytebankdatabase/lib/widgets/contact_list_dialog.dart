@@ -1,6 +1,6 @@
 import 'package:bytebankdatabase/database/dao/contact_dao.dart';
 import 'package:bytebankdatabase/model/contact.dart';
-import 'package:bytebankdatabase/screens/contacts_list.dart';
+import 'package:bytebankdatabase/screens/contact/contacts_list.dart';
 import 'package:flutter/material.dart';
 
 class ContactsDialog extends StatefulWidget {

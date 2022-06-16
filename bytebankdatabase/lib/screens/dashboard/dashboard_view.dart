@@ -1,14 +1,14 @@
-import 'package:bytebankdatabase/widgets/i18n/i18n_container.dart';
+import 'package:bytebankdatabase/screens/counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:bytebankdatabase/model/name.dart';
 import 'package:bytebankdatabase/screens/apelido_user.dart';
-import 'package:bytebankdatabase/screens/contacts_list.dart';
-import 'package:bytebankdatabase/screens/lista_transferencia.dart';
+import 'package:bytebankdatabase/screens/contact/contacts_list.dart';
+import 'package:bytebankdatabase/screens/transferencia/lista_transferencia.dart';
 import 'package:bytebankdatabase/widgets/container.dart';
 
-import '../../widgets/i18n/i18n_messages.dart';
+import '../video.dart';
 import 'dashboard_i18n.dart';
 import 'dashboard_item.dart';
 
@@ -58,6 +58,20 @@ class DashboardView extends StatelessWidget {
                     _showName(context);
                   },
                 ),
+                FeatureItem(
+                  "Video",
+                  Icons.video_call_outlined,
+                  onClick: () {
+                    _showAvideo(context);
+                  },
+                ),
+                FeatureItem(
+                  "Counter",
+                  Icons.video_call_outlined,
+                  onClick: () {
+                    _counter(context);
+                  },
+                ),
               ],
             ),
           ),
@@ -85,6 +99,22 @@ class DashboardView extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ListaTransferencias(),
+      ),
+    );
+  }
+
+  void _showAvideo(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ShowAvideo(),
+      ),
+    );
+  }
+
+  void _counter(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CountContainer(),
       ),
     );
   }
