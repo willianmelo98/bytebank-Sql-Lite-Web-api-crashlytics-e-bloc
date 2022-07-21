@@ -12,11 +12,11 @@ class I18NMessagesCubit extends Cubit<I18NMessagesState> {
 
   reload(I18NWebClient client) async {
     emit(LoadingI18NMessagesState());
-    // final items = await getStoraItem();
-    // if (items != null) {
-    //   emit(LoadedI18NMessagesState(I18NMessages(items)));
-    //   return;
-    // }
+    final items = await getStoraItem();
+    if (items != null) {
+      emit(LoadedI18NMessagesState(I18NMessages(items)));
+      return;
+    }
     client.findAll().then(saveAndRefresh);
   }
 
