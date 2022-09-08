@@ -13,7 +13,7 @@ class I18NWebClient {
   Future<Map<String, dynamic>> findAll() async {
     final Response response = await client
         .get(Uri.http(EndPoint.baseI18N,
-            EndPoint.compleI18N + _viewKey + "_$locale" + ".json"))
+            EndPoint.compleI18N + _viewKey + "_en" + ".json"))
         .timeout(Duration(seconds: 5));
     final Map<String, dynamic> decodedJson = jsonDecode(response.body);
     return decodedJson;
