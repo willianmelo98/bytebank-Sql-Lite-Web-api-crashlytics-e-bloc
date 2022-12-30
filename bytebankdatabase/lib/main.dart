@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -8,10 +9,17 @@ import 'package:bytebankdatabase/widgets/tema_app.dart';
 import 'screens/dashboard/dashboard_container.dart';
 import 'widgets/i18n/locale.dart';
 
+late List<CameraDescription> cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  try {
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
+      FirebaseCrashlytics.instance.setCustomKey('Objeto do erro: ', e);
+    }
+  }
   if (kDebugMode) {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   } else {

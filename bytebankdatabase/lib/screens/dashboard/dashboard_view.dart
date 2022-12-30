@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:bytebankdatabase/main.dart';
 import 'package:bytebankdatabase/screens/counter.dart';
+import 'package:bytebankdatabase/widgets/ViewPhoto.dart';
+import 'package:bytebankdatabase/widgets/camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,6 +13,8 @@ import 'package:bytebankdatabase/screens/contact/contacts_list.dart';
 import 'package:bytebankdatabase/screens/transferencia/lista_transferencia.dart';
 import 'package:bytebankdatabase/widgets/container.dart';
 
+import '../../widgets/camera/camera2.dart';
+import '../../widgets/camera/camera3/camera_screen.dart';
 import '../video.dart';
 import 'dashboard_i18n.dart';
 import 'dashboard_item.dart';
@@ -59,10 +66,24 @@ class DashboardView extends StatelessWidget {
                   },
                 ),
                 FeatureItem(
-                  "Video",
+                  "Camera 1",
                   Icons.video_call_outlined,
                   onClick: () {
-                    _showAvideo(context);
+                    _showACamera1(context);
+                  },
+                ),
+                FeatureItem(
+                  "Camera 2",
+                  Icons.video_call_outlined,
+                  onClick: () {
+                    _showACamera2(context);
+                  },
+                ),
+                FeatureItem(
+                  "Camera 3",
+                  Icons.video_call_outlined,
+                  onClick: () {
+                    _showACamera3(context);
                   },
                 ),
                 FeatureItem(
@@ -103,10 +124,32 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  void _showAvideo(BuildContext context) {
+  void _showACamera2(BuildContext context) {
+    final firstCamera = cameras.first;
+
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ShowAvideo(),
+        builder: (context) => TakePictureScreen(
+          camera: firstCamera,
+        ),
+      ),
+    );
+  }
+
+  void _showACamera1(BuildContext context) {
+    final firstCamera = cameras.first;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CameraExampleHome(),
+      ),
+    );
+  }
+
+  void _showACamera3(BuildContext context) {
+    final firstCamera = cameras.first;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CameraScreen(),
       ),
     );
   }
