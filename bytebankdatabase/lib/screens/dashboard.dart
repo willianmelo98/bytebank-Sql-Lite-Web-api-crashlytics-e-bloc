@@ -24,40 +24,49 @@ class DashboardView extends StatelessWidget {
           builder: (context, state) => Text('Bem vindo, $state '),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('images/bytebank_logo.png'),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _FeatureItem('Transfer', Icons.monetization_on, onClick: () {
-                  _showContactsList(context);
-                }),
-                _FeatureItem(
-                  'Transactions',
-                  Icons.description,
-                  onClick: () {
-                    _showTransactionsList(context);
-                  },
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset('images/bytebank_logo.png'),
                 ),
-                _FeatureItem(
-                  'Name',
-                  Icons.person_outlined,
-                  onClick: () {
-                    _showName(context);
-                  },
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      FeatureItem('Transfer', Icons.monetization_on,
+                          onClick: () {
+                        _showContactsList(context);
+                      }),
+                      FeatureItem(
+                        'Transactions',
+                        Icons.description,
+                        onClick: () {
+                          _showTransactionsList(context);
+                        },
+                      ),
+                      FeatureItem(
+                        'Name',
+                        Icons.person_outlined,
+                        onClick: () {
+                          _showName(context);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        );
+      }),
     );
   }
 
@@ -89,12 +98,12 @@ class DashboardView extends StatelessWidget {
   }
 }
 
-class _FeatureItem extends StatelessWidget {
+class FeatureItem extends StatelessWidget {
   final String name;
   final IconData icon;
   final Function? onClick;
   // ignore: prefer_const_constructors_in_immutables
-  _FeatureItem(
+  FeatureItem(
     this.name,
     this.icon, {
     @required this.onClick,

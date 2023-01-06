@@ -88,9 +88,9 @@ class ItemTransferencia extends StatelessWidget {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_transferencia!.contato.name.toString()),
+            Text(_transferencia!.contato!.name.toString()),
             Text(', conta: '),
-            Text(_transferencia!.contato.accountNumber.toString()),
+            Text(_transferencia!.contato!.accountNumber.toString()),
           ],
         ),
         subtitle: Text('Valor: ${_transferencia!.valor.toString()}'),

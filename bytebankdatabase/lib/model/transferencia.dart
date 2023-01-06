@@ -1,11 +1,12 @@
 import 'contact.dart';
 
 class Transferencia {
-  final String uuid;
+  final String? uuid;
   final double? valor;
-  final Contact contato;
+  final Contact? contato;
 
-  Transferencia(this.uuid, this.valor, this.contato);
+  Transferencia(this.uuid, this.valor, this.contato)
+      : assert(valor != null && valor > 0);
 
   Transferencia.fromJson(Map<String, dynamic> json)
       : uuid = json['id'],
@@ -15,7 +16,7 @@ class Transferencia {
   Map<String, dynamic> toJson() => {
         'id': uuid,
         'value': valor,
-        'contact': contato.toJson(),
+        'contact': contato!.toJson(),
       };
 
   @override

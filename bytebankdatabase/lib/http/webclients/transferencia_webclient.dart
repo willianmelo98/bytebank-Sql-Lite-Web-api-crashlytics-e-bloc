@@ -8,7 +8,7 @@ class TransferenciaWebClient {
   Future<List<Transferencia>> findAll() async {
     final Response response = await client
         .get(Uri.http(EndPoint.baseUrl, EndPoint.transaction))
-        .timeout(Duration(seconds: 5));
+        .timeout(const Duration(seconds: 5));
     List<dynamic> decodedJson = jsonDecode(response.body);
     return decodedJson
         .map((dynamic json) => Transferencia.fromJson(json))
@@ -25,7 +25,7 @@ class TransferenciaWebClient {
               'password': senha,
             },
             body: jsonTransaction)
-        .timeout(Duration(seconds: 5));
+        .timeout(const Duration(seconds: 5));
 
     if (response.statusCode == 200) {
       return Transferencia.fromJson(jsonDecode(response.body));
