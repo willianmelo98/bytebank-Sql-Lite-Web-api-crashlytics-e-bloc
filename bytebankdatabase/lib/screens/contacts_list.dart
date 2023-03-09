@@ -6,25 +6,28 @@ import 'package:bytebankdatabase/screens/contact_form.dart';
 import 'package:bytebankdatabase/screens/transaction_form.dart';
 import 'package:bytebankdatabase/widgets/progress_indicator.dart';
 
+import '../widgets/app_dependencias.dart';
+
 class ContactsList extends StatefulWidget {
   bool optionsVisible;
   ContactsList({
+    Key? key,
     this.optionsVisible = true,
-  });
+  }) : super(key: key);
   @override
   State<ContactsList> createState() => _ContactsListState();
 }
 
 class _ContactsListState extends State<ContactsList> {
-  final ContactDao _contactDao = ContactDao();
   @override
   Widget build(BuildContext context) {
+    final dependencias = AppDependencias.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Contacts"),
       ),
       body: FutureBuilder<List<Contact>>(
-        future: _contactDao.findAll(),
+        future: dependencias.contactDao.findAll(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             snapshot.error;
@@ -48,14 +51,14 @@ class _ContactsListState extends State<ContactsList> {
                   itemBuilder: (context, index) {
                     final Contact _contactItem = contactList[index];
 
-                    return _ContactItem(
+                    return ContactItem(
                       visibleOptions: widget.optionsVisible,
                       contact: _contactItem,
                       onClick: () {
                         _novaTransferencia(context, _contactItem);
                       },
                       deleteContact: () {
-                        _deleteContact(_contactItem);
+                        _deleteContact(_contactItem, dependencias.contactDao);
                       },
                       updateContact: () {
                         _updateContact(context, _contactItem);
@@ -82,48 +85,50 @@ class _ContactsListState extends State<ContactsList> {
     );
   }
 
-  void _newContact(BuildContext context) {
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(builder: (context) => ContactForm()),
-        )
-        .then((value) => setState(() {}));
+  void _newContact(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => ContactForm()),
+    );
+    setState(() {});
   }
 
-  void _novaTransferencia(BuildContext context, Contact _contactItem) {
-    final isDialog = widget.optionsVisible;
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (context) => TransactionForm(_contactItem),
-          ),
-        )
-        .then((value) => !isDialog ? Navigator.pop(context) : print('false'));
+  void _novaTransferencia(BuildContext context, Contact _contactItem) async {
+    final isDialog = !widget.optionsVisible;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TransactionForm(_contactItem),
+      ),
+    );
+    if (isDialog) {
+      Navigator.pop(context);
+    }
   }
 
-  void _deleteContact(Contact _contactItem) {
-    _contactDao.delete(_contactItem.id!).whenComplete(() => setState(() {}));
+  void _deleteContact(Contact _contactItem, ContactDao contactDao) async {
+    await contactDao.delete(_contactItem.id!);
+    setState(() {});
   }
 
-  void _updateContact(BuildContext context, Contact _contactItem) {
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (context) => ContactForm(contactInicial: _contactItem),
-          ),
-        )
-        .whenComplete(() => setState(() {}));
+  void _updateContact(BuildContext context, Contact _contactItem) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ContactForm(
+          contactInicial: _contactItem,
+        ),
+      ),
+    );
+    setState(() {});
   }
 }
 
-class _ContactItem extends StatefulWidget {
+class ContactItem extends StatefulWidget {
   final Contact contact;
   final Function onClick;
   final Function deleteContact;
   final Function updateContact;
   final bool visibleOptions;
 
-  const _ContactItem(
+  const ContactItem(
       {Key? key,
       required this.contact,
       required this.onClick,
@@ -133,10 +138,10 @@ class _ContactItem extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<_ContactItem> createState() => _ContactItemState();
+  State<ContactItem> createState() => _ContactItemState();
 }
 
-class _ContactItemState extends State<_ContactItem> {
+class _ContactItemState extends State<ContactItem> {
   @override
   Widget build(BuildContext context) {
     return Card(

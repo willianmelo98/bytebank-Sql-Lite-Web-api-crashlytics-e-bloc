@@ -4,6 +4,7 @@ import 'package:bytebankdatabase/http/webclients/transferencia_webclient.dart';
 import 'package:bytebankdatabase/model/contact.dart';
 import 'package:bytebankdatabase/model/transferencia.dart';
 import 'package:bytebankdatabase/widgets/alert_dialog.dart';
+import 'package:bytebankdatabase/widgets/app_dependencias.dart';
 import 'package:bytebankdatabase/widgets/giff_dialog.dart';
 import 'package:bytebankdatabase/widgets/progress_indicator.dart';
 import 'package:bytebankdatabase/widgets/response_dialog.dart';
@@ -23,13 +24,14 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
-  final TransferenciaWebClient transferenciaWebCliente =
-      TransferenciaWebClient();
+
   final String uuid = Uuid().v4();
 
   bool _mostrarProgresso = false;
   @override
   Widget build(BuildContext context) {
+    final transferenciaWebCliente =
+        AppDependencias.of(context).transferenciaWebCliente;
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -76,7 +78,8 @@ class _TransactionFormState extends State<TransactionForm> {
                           context: context,
                           builder: (contextDialog) => AlertAuthDialog(
                                 login: ({senha}) {
-                                  _saveTransacao(senha, context);
+                                  _saveTransacao(
+                                      transferenciaWebCliente, senha, context);
                                 },
                               ));
                     },
@@ -99,11 +102,12 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
-  void _saveTransacao(String? senha, BuildContext context) async {
+  void _saveTransacao(TransferenciaWebClient transferenciaWebClient,
+      String? senha, BuildContext context) async {
     final double? value = double.tryParse(_valueController.text);
     final transactionCreated = Transferencia(uuid, value, widget.contact);
-    Transferencia transferenciaEnviada =
-        await _sendNewTransafer(transactionCreated, senha, context);
+    Transferencia transferenciaEnviada = await _sendNewTransafer(
+        transferenciaWebClient, transactionCreated, senha, context);
 
     if (transferenciaEnviada != null) {
       _sucessoTransferencia(context);
@@ -118,8 +122,11 @@ class _TransactionFormState extends State<TransactionForm> {
     Navigator.of(context).pop();
   }
 
-  Future<Transferencia> _sendNewTransafer(Transferencia transactionCreated,
-      String? senha, BuildContext context) async {
+  Future<Transferencia> _sendNewTransafer(
+      TransferenciaWebClient transferenciaWebCliente,
+      Transferencia transactionCreated,
+      String? senha,
+      BuildContext context) async {
     setState(() {
       _mostrarProgresso = true;
     });

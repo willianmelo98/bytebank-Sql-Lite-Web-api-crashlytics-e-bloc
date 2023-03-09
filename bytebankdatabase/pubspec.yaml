@@ -29,6 +29,8 @@ dev_dependencies:
   http: ^0.13.4
   http_interceptor: ^1.0.2
   uuid: ^3.0.6
+  mockito:
+  build_runner:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

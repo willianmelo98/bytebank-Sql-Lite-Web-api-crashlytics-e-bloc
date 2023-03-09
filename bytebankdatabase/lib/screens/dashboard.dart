@@ -1,21 +1,27 @@
-import 'package:bytebankdatabase/screens/apelido_user.dart';
-import 'package:bytebankdatabase/screens/lista_transferencia.dart';
 import 'package:flutter/material.dart';
-
-import 'package:bytebankdatabase/screens/contacts_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:bytebankdatabase/database/dao/contact_dao.dart';
+import 'package:bytebankdatabase/screens/apelido_user.dart';
+import 'package:bytebankdatabase/screens/contacts_list.dart';
+import 'package:bytebankdatabase/screens/lista_transferencia.dart';
 
 class DashboardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (contextBloc) => NameCubit('Willian'),
-      child: DashboardView(),
+      child: DashboardView(contactDao: ContactDao()),
     );
   }
 }
 
 class DashboardView extends StatelessWidget {
+  final ContactDao contactDao;
+  const DashboardView({
+    Key? key,
+    required this.contactDao,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +49,7 @@ class DashboardView extends StatelessWidget {
                     children: [
                       FeatureItem('Transfer', Icons.monetization_on,
                           onClick: () {
-                        _showContactsList(context);
+                        _showContactsList(context, contactDao);
                       }),
                       FeatureItem(
                         'Transactions',
@@ -70,7 +76,7 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  void _showContactsList(BuildContext context) {
+  void _showContactsList(BuildContext context, ContactDao contactDao) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ContactsList(),

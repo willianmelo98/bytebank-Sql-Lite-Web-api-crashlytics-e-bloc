@@ -9,7 +9,6 @@ class ContactsDialog extends StatefulWidget {
 }
 
 class _ContactsDialogState extends State<ContactsDialog> {
-  final ContactDao _contactDao = ContactDao();
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -1,10 +1,14 @@
 import 'package:bytebankdatabase/database/dao/contact_dao.dart';
 import 'package:bytebankdatabase/model/contact.dart';
+import 'package:bytebankdatabase/widgets/app_dependencias.dart';
 import 'package:flutter/material.dart';
 
 class ContactForm extends StatefulWidget {
-  Contact? contactInicial;
-  ContactForm({this.contactInicial});
+  final Contact? contactInicial;
+
+  ContactForm({
+    this.contactInicial,
+  });
 
   @override
   State<ContactForm> createState() =>
@@ -13,7 +17,7 @@ class ContactForm extends StatefulWidget {
 
 class _ContactFormState extends State<ContactForm> {
   final Contact? contactUpdate;
-  _ContactFormState({this.contactUpdate});
+  _ContactFormState({this.contactUpdate = null});
   final TextEditingController controllerName = new TextEditingController();
   final TextEditingController controllerContact = new TextEditingController();
   String textoButton = '';
@@ -29,9 +33,9 @@ class _ContactFormState extends State<ContactForm> {
     }
   }
 
-  final ContactDao _contactDao = ContactDao();
   @override
   Widget build(BuildContext context) {
+    final dependencias = AppDependencias.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("New Contact"),
@@ -64,7 +68,7 @@ class _ContactFormState extends State<ContactForm> {
                 width: double.maxFinite,
                 child: ElevatedButton(
                   onPressed: () {
-                    _saveOnDatabase(context);
+                    _saveOnDatabase(context, dependencias.contactDao);
                   },
                   child: Text(textoButton),
                 ),
@@ -76,7 +80,7 @@ class _ContactFormState extends State<ContactForm> {
     );
   }
 
-  void _saveOnDatabase(BuildContext context) {
+  void _saveOnDatabase(BuildContext context, ContactDao contactDao) async {
     final String nameContact = controllerName.text;
     final int numeroContact = int.tryParse(controllerContact.text) ?? 000;
     Contact contactCreated = Contact(
@@ -86,11 +90,11 @@ class _ContactFormState extends State<ContactForm> {
     );
     if (nameContact != "" && numeroContact != 0) {
       if (contactUpdate?.id == null) {
-        _contactDao.save(contactCreated).then((id) => Navigator.pop(context));
+        await contactDao.save(contactCreated);
+        Navigator.pop(context);
       } else {
-        _contactDao
-            .update(contactCreated)
-            .then((id) => Navigator.pop(context, contactCreated));
+        await contactDao.update(contactCreated);
+        Navigator.pop(context, contactCreated);
       }
     } else {
       showDialog<String>(

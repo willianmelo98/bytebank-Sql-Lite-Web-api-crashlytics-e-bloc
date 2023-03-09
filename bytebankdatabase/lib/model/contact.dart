@@ -1,7 +1,7 @@
 class Contact {
   final int? id;
   final String name;
-  final int? accountNumber;
+  final int accountNumber;
 
   Contact({
     this.id,
@@ -22,4 +22,16 @@ class Contact {
   @override
   String toString() =>
       'New Contact(id:$id,name: $name, number: $accountNumber)';
+
+  @override
+  int get hashCode => name.hashCode ^ accountNumber.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Contact &&
+        other.name == name &&
+        other.accountNumber == accountNumber;
+  }
 }
