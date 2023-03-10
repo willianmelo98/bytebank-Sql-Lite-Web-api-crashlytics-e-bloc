@@ -1,6 +1,7 @@
 import 'package:bytebankdatabase/database/dao/contact_dao.dart';
 import 'package:bytebankdatabase/main.dart';
 import 'package:bytebankdatabase/model/contact.dart';
+import 'package:bytebankdatabase/model/transferencia.dart';
 import 'package:bytebankdatabase/screens/contacts_list.dart';
 import 'package:bytebankdatabase/screens/dashboard.dart';
 import 'package:bytebankdatabase/screens/transaction_form.dart';
@@ -19,6 +20,7 @@ void main() {
   testWidgets(
     "Deve realizar uma transfer",
     ((tester) async {
+      final contact = Contact(id: 0, name: 'Will', accountNumber: 1000);
       final MockContactDao mockContactDao = MockContactDao();
       final MockTransferenciaWebCliente mockTransferenciaWebCliente =
           MockTransferenciaWebCliente();
@@ -31,7 +33,7 @@ void main() {
       final dashboardItem = find.byType(DashboardContainer);
 
       when(mockContactDao.findAll()).thenAnswer((invocation) async {
-        return [Contact(id: 0, name: 'Will', accountNumber: 1000)];
+        return [contact];
       });
 
       expect(dashboardItem, findsOneWidget);
@@ -86,6 +88,22 @@ void main() {
 
       final transactionAuthDialog = find.byType(AlertAuthDialog);
       expect(transactionAuthDialog, findsOneWidget);
+
+      final textFieldPassword =
+          find.byKey(transactionAuthDialogTextFieldPasswordKey);
+      expect(textFieldPassword, findsOneWidget);
+
+      final cancelButton = find.widgetWithText(ElevatedButton, 'Cancel');
+      expect(cancelButton, findsOneWidget);
+
+      final confirmButton = find.widgetWithText(ElevatedButton, 'confirm');
+      expect(confirmButton, findsOneWidget);
+
+      /*  when(mockTransferenciaWebCliente.save(
+              Transferencia(null, 200, contact), '1000'))
+          .thenAnswer((_) async => Transferencia(null, 200, contact));
+
+      await tester.tap(confirmButton); */
     }),
   );
 }

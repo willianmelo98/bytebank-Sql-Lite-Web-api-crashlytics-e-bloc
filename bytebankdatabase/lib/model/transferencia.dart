@@ -22,4 +22,15 @@ class Transferencia {
   @override
   String toString() =>
       'Transferencia criada, valor: $valor, numeroConta: $contato';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Transferencia &&
+          runtimeType == other.runtimeType &&
+          valor == other.valor &&
+          contato == other.contato;
+
+  @override
+  int get hashCode => valor.hashCode ^ contato.hashCode;
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+const Key transactionAuthDialogTextFieldPasswordKey =
+    Key('transactionAuthDialogTextFieldPasswordKey');
+
 class AlertAuthDialog extends StatefulWidget {
   final Function({@required String? senha})? login;
 
@@ -17,6 +20,7 @@ class _AlertAuthDialogState extends State<AlertAuthDialog> {
     return AlertDialog(
       title: Text(titleString),
       content: TextField(
+        key: transactionAuthDialogTextFieldPasswordKey,
         controller: _valueController,
         maxLength: 4,
         obscureText: true,

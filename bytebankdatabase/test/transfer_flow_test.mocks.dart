@@ -2,10 +2,13 @@
 // in bytebankdatabase/test/transfer_flow_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
-import 'package:bytebankdatabase/database/dao/contact_dao.dart' as _i2;
-import 'package:bytebankdatabase/model/contact.dart' as _i4;
+import 'package:bytebankdatabase/database/dao/contact_dao.dart' as _i3;
+import 'package:bytebankdatabase/http/webclients/transferencia_webclient.dart'
+    as _i6;
+import 'package:bytebankdatabase/model/contact.dart' as _i5;
+import 'package:bytebankdatabase/model/transferencia.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -18,29 +21,55 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
+class _FakeTransferencia_0 extends _i1.Fake implements _i2.Transferencia {}
+
 /// A class which mocks [ContactDao].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockContactDao extends _i1.Mock implements _i2.ContactDao {
+class MockContactDao extends _i1.Mock implements _i3.ContactDao {
   MockContactDao() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<int> save(_i4.Contact? contact) =>
+  _i4.Future<int> save(_i5.Contact? contact) =>
       (super.noSuchMethod(Invocation.method(#save, [contact]),
-          returnValue: Future<int>.value(0)) as _i3.Future<int>);
+          returnValue: Future<int>.value(0)) as _i4.Future<int>);
   @override
-  _i3.Future<int> update(_i4.Contact? contact) =>
+  _i4.Future<int> update(_i5.Contact? contact) =>
       (super.noSuchMethod(Invocation.method(#update, [contact]),
-          returnValue: Future<int>.value(0)) as _i3.Future<int>);
+          returnValue: Future<int>.value(0)) as _i4.Future<int>);
   @override
-  _i3.Future<int> delete(int? id) =>
+  _i4.Future<int> delete(int? id) =>
       (super.noSuchMethod(Invocation.method(#delete, [id]),
-          returnValue: Future<int>.value(0)) as _i3.Future<int>);
+          returnValue: Future<int>.value(0)) as _i4.Future<int>);
   @override
-  _i3.Future<List<_i4.Contact>> findAll() =>
+  _i4.Future<List<_i5.Contact>> findAll() =>
       (super.noSuchMethod(Invocation.method(#findAll, []),
-              returnValue: Future<List<_i4.Contact>>.value(<_i4.Contact>[]))
-          as _i3.Future<List<_i4.Contact>>);
+              returnValue: Future<List<_i5.Contact>>.value(<_i5.Contact>[]))
+          as _i4.Future<List<_i5.Contact>>);
+}
+
+/// A class which mocks [TransferenciaWebClient].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTransferenciaWebClient extends _i1.Mock
+    implements _i6.TransferenciaWebClient {
+  MockTransferenciaWebClient() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<List<_i2.Transferencia>> findAll() =>
+      (super.noSuchMethod(Invocation.method(#findAll, []),
+              returnValue:
+                  Future<List<_i2.Transferencia>>.value(<_i2.Transferencia>[]))
+          as _i4.Future<List<_i2.Transferencia>>);
+  @override
+  _i4.Future<_i2.Transferencia> save(
+          _i2.Transferencia? transferencia, String? senha) =>
+      (super.noSuchMethod(Invocation.method(#save, [transferencia, senha]),
+              returnValue:
+                  Future<_i2.Transferencia>.value(_FakeTransferencia_0()))
+          as _i4.Future<_i2.Transferencia>);
 }
